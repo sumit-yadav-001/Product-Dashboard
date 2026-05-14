@@ -100,7 +100,7 @@ export function RealtimePage() {
       location: `${u.address.city}, ${u.address.country}`,
       page: ['/dashboard', '/products', '/analytics', '/settings', '/profile'][u.id % 5],
       duration: `${Math.floor(u.age / 10)}m ${u.age % 60}s`,
-      device: (['desktop', 'mobile', 'tablet'] as const)[u.id % 3],
+      device: (['desktop', 'mobile', 'tablet'] as const)[u.id % 3] as 'desktop' | 'mobile' | 'tablet',
     }));
   }, [usersData]);
 

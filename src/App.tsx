@@ -7,6 +7,7 @@ import { AdminRoute } from '@/components/common/AdminRoute';
 
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
+
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { UsersPage } from '@/pages/users/UsersPage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
@@ -19,14 +20,32 @@ import { SimpleFormPage } from '@/pages/SimpleFormPage';
 import { ComprehensiveFormPage } from '@/pages/ComprehensiveFormPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
-// Lazy load pages for better performance & code splitting
 import { lazy, Suspense } from 'react';
-import { ProductSkeleton } from '@/components/common/ProductSkeleton';
-import { ProductDetailSkeleton, PageLoadingSkeleton } from '@/components/common/Skeletons';
 
-const ProductsPage = lazy(() => import('@/pages/products/ProductsPage').then(m => ({ default: m.ProductsPage })));
-const ProductDetailPage = lazy(() => import('@/pages/products/ProductDetailPage').then(m => ({ default: m.ProductDetailPage })));
-const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })));
+import { ProductSkeleton } from '@/components/common/ProductSkeleton';
+
+import {
+  ProductDetailSkeleton,
+  PageLoadingSkeleton,
+} from '@/components/common/Skeletons';
+
+const ProductsPage = lazy(() =>
+  import('@/pages/products/ProductsPage').then((m) => ({
+    default: m.ProductsPage,
+  }))
+);
+
+const ProductDetailPage = lazy(() =>
+  import('@/pages/products/ProductDetailPage').then((m) => ({
+    default: m.ProductDetailPage,
+  }))
+);
+
+const ForgotPasswordPage = lazy(() =>
+  import('@/pages/auth/ForgotPasswordPage').then((m) => ({
+    default: m.ForgotPasswordPage,
+  }))
+);
 
 export function App() {
   return (
@@ -37,7 +56,7 @@ export function App() {
         <Route path="/register" element={<RegisterPage />} />
       </Route>
 
-      {/* Forgot Password - standalone full-screen layout */}
+      {/* Forgot Password */}
       <Route
         path="/forgot-password"
         element={
@@ -54,8 +73,8 @@ export function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
-          
-          {/* Products Routes */}
+
+          {/* Products */}
           <Route
             path="/products"
             element={
@@ -64,6 +83,7 @@ export function App() {
               </Suspense>
             }
           />
+
           <Route
             path="/products/:id"
             element={
@@ -72,20 +92,23 @@ export function App() {
               </Suspense>
             }
           />
-          
-          {/* Analytics Routes */}
+
+          {/* Analytics */}
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/analytics/reports" element={<ReportsPage />} />
           <Route path="/analytics/realtime" element={<RealtimePage />} />
-          
-          {/* Settings Routes */}
+
+          {/* Settings */}
           <Route path="/settings" element={<SettingsPage />} />
-          
-          {/* Form Examples */}
+
+          {/* Forms */}
           <Route path="/forms" element={<SimpleFormPage />} />
-          <Route path="/forms/comprehensive" element={<ComprehensiveFormPage />} />
-          
-          {/* Admin Routes */}
+          <Route
+            path="/forms/comprehensive"
+            element={<ComprehensiveFormPage />}
+          />
+
+          {/* Admin */}
           <Route element={<AdminRoute />}>
             <Route path="/users" element={<UsersPage />} />
           </Route>

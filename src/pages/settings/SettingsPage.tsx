@@ -11,7 +11,9 @@ import {
   Palette,
   Database,
   Lock,
-  Mail
+  Mail,
+  Monitor,
+  Smartphone,
 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,10 +25,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/common/Skeletons';
 import { useCurrentUser } from '@/hooks/redux';
+import { useGetUsersQuery } from '@/store/api/usersApi';
+
+// Device type icons based on index
+const SESSION_DEVICES = [
+  { device: 'Chrome on Windows', icon: Monitor },
+  { device: 'Safari on iPhone',  icon: Smartphone },
+  { device: 'Firefox on Linux',  icon: Monitor },
+];
 
 export function SettingsPage() {
   const user = useCurrentUser();
+  const { data: sessionsData, isLoading: sessionsLoading } = useGetUsersQuery({ limit: 3 });
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -205,26 +217,44 @@ export function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
-                {[
-                  { device: 'Chrome on Windows', location: 'New York, US', current: true },
-                  { device: 'Safari on iPhone', location: 'San Francisco, US', current: false },
-                  { device: 'Firefox on Linux', location: 'London, UK', current: false },
-                ].map((session, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <div className="font-medium">{session.device}</div>
-                      <div className="text-sm text-muted-foreground">{session.location}</div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {session.current && (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Current</span>
-                      )}
-                      {!session.current && (
-                        <Button variant="outline" size="sm">Revoke</Button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                {sessionsLoading
+                  ? Array.from({ length: 3 }).map((_, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="space-y-1.5">
+                          <Skeleton className="h-4 w-40" />
+                          <Skeleton className="h-3 w-28" />
+                        </div>
+                        <Skeleton className="h-8 w-16" />
+                      </div>
+                    ))
+                  : (sessionsData?.users ?? []).map((sessionUser, index) => {
+                      const deviceInfo = SESSION_DEVICES[index] ?? SESSION_DEVICES[0]!;
+                      const DeviceIcon = deviceInfo.icon;
+                      const location = `${sessionUser.address.city}, ${sessionUser.address.country}`;
+                      const isCurrent = index === 0;
+                      return (
+                        <div key={sessionUser.id} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
+                              <DeviceIcon className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                            <div>
+                              <div className="font-medium">{deviceInfo.device}</div>
+                              <div className="text-sm text-muted-foreground">{location}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {isCurrent && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Current</span>
+                            )}
+                            {!isCurrent && (
+                              <Button variant="outline" size="sm">Revoke</Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })
+                }
               </div>
               <Button variant="destructive">Revoke All Other Sessions</Button>
             </CardContent>

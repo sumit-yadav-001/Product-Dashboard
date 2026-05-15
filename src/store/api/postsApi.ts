@@ -29,6 +29,14 @@ export interface PostQueryParams {
   select?: string;
 }
 
+export interface CreatePostPayload {
+  title: string;
+  body: string;
+  userId: number;
+  tags: string[];
+  reactions?: { likes: number; dislikes: number };
+}
+
 export const postsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get all posts with pagination
@@ -38,15 +46,12 @@ export const postsApi = apiSlice.injectEndpoints({
         params.append('limit', limit.toString());
         params.append('skip', skip.toString());
         if (select) params.append('select', select);
-        
-        const url = q 
+
+        const url = q
           ? `${DUMMYJSON_BASE_URL}/posts/search?q=${encodeURIComponent(q)}&${params.toString()}`
           : `${DUMMYJSON_BASE_URL}/posts?${params.toString()}`;
-        
-        return {
-          url,
-          method: 'GET',
-        };
+
+        return { url, method: 'GET' };
       },
       providesTags: (result) =>
         result
@@ -77,6 +82,16 @@ export const postsApi = apiSlice.injectEndpoints({
       providesTags: (result, error, userId) => [{ type: 'Post', id: `USER-${userId}` }],
       keepUnusedDataFor: 300,
     }),
+
+    // Create a new post (POST /posts/add)
+    createPost: builder.mutation<Post, CreatePostPayload>({
+      query: (body) => ({
+        url: `${DUMMYJSON_BASE_URL}/posts/add`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -86,4 +101,5 @@ export const {
   useGetPostQuery,
   useGetPostsByUserQuery,
   useLazyGetPostsQuery,
+  useCreatePostMutation,
 } = postsApi;

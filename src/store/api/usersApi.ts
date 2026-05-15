@@ -42,6 +42,16 @@ export interface UserQueryParams {
   select?: string;
 }
 
+export interface UpdateUserPayload {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  image?: string;
+  address?: Partial<DummyUser['address']>;
+  company?: Partial<DummyUser['company']>;
+}
+
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get all users with pagination and search
@@ -51,15 +61,12 @@ export const usersApi = apiSlice.injectEndpoints({
         params.append('limit', limit.toString());
         params.append('skip', skip.toString());
         if (select) params.append('select', select);
-        
-        const url = q 
+
+        const url = q
           ? `${DUMMYJSON_BASE_URL}/users/search?q=${encodeURIComponent(q)}&${params.toString()}`
           : `${DUMMYJSON_BASE_URL}/users?${params.toString()}`;
-        
-        return {
-          url,
-          method: 'GET',
-        };
+
+        return { url, method: 'GET' };
       },
       providesTags: (result) =>
         result
@@ -68,7 +75,7 @@ export const usersApi = apiSlice.injectEndpoints({
               { type: 'User', id: 'LIST' },
             ]
           : [{ type: 'User', id: 'LIST' }],
-      keepUnusedDataFor: 300, // Cache for 5 minutes
+      keepUnusedDataFor: 300,
     }),
 
     // Get single user by ID
@@ -78,7 +85,17 @@ export const usersApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
       providesTags: (result, error, id) => [{ type: 'User', id }],
-      keepUnusedDataFor: 600, // Cache for 10 minutes
+      keepUnusedDataFor: 600,
+    }),
+
+    // Update user (PATCH /users/{id})
+    updateUser: builder.mutation<DummyUser, { id: number; data: UpdateUserPayload }>({
+      query: ({ id, data }) => ({
+        url: `${DUMMYJSON_BASE_URL}/users/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
     }),
 
     // Filter users by key-value
@@ -97,6 +114,7 @@ export const usersApi = apiSlice.injectEndpoints({
 export const {
   useGetUsersQuery,
   useGetUserQuery,
+  useUpdateUserMutation,
   useFilterUsersQuery,
   useLazyGetUsersQuery,
   useLazyGetUserQuery,

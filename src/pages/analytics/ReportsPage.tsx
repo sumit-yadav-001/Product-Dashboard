@@ -21,6 +21,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/common/Skeletons';
+import { useGetPostsQuery } from '@/store/api/postsApi';
 
 interface ReportCardProps {
   title: string;
@@ -71,60 +73,20 @@ function ReportCard({ title, description, lastGenerated, icon: Icon, status }: R
   );
 }
 
+// Cycle through report icons for variety
+const REPORT_ICONS = [Users, DollarSign, Eye, TrendingUp, Mail, ShoppingCart];
+
 export function ReportsPage() {
   const [dateRange, setDateRange] = useState('last30days');
   const [reportType, setReportType] = useState('all');
 
-  const reports = [
-    {
-      title: 'User Activity Report',
-      description: 'Comprehensive analysis of user behavior and engagement patterns',
-      lastGenerated: '2 hours ago',
-      icon: Users,
-      status: 'ready' as const,
-    },
-    {
-      title: 'Revenue Analytics',
-      description: 'Financial performance metrics and revenue breakdowns',
-      lastGenerated: '1 day ago',
-      icon: DollarSign,
-      status: 'ready' as const,
-    },
-    {
-      title: 'Traffic Analysis',
-      description: 'Website traffic patterns and source analysis',
-      lastGenerated: '3 hours ago',
-      icon: Eye,
-      status: 'generating' as const,
-    },
-    {
-      title: 'Conversion Funnel',
-      description: 'User journey analysis and conversion optimization insights',
-      lastGenerated: '5 hours ago',
-      icon: TrendingUp,
-      status: 'ready' as const,
-    },
-    {
-      title: 'Email Campaign Performance',
-      description: 'Email marketing metrics and campaign effectiveness',
-      lastGenerated: '1 week ago',
-      icon: Mail,
-      status: 'failed' as const,
-    },
-    {
-      title: 'E-commerce Analytics',
-      description: 'Product performance and sales analytics',
-      lastGenerated: '6 hours ago',
-      icon: ShoppingCart,
-      status: 'ready' as const,
-    },
-  ];
+  const { data: postsData, isLoading: postsLoading } = useGetPostsQuery({ limit: 6 });
 
   const quickStats = [
-    { label: 'Total Reports', value: '24' },
-    { label: 'Generated Today', value: '6' },
-    { label: 'Scheduled', value: '8' },
-    { label: 'Failed', value: '2' },
+    { label: 'Total Reports',    value: postsData?.total?.toString() ?? '—' },
+    { label: 'Generated Today',  value: '6' },
+    { label: 'Scheduled',        value: '8' },
+    { label: 'Failed',           value: '2' },
   ];
 
   return (
@@ -229,9 +191,48 @@ export function ReportsPage() {
         
         <TabsContent value="all" className="space-y-4">
           <div className="grid gap-4">
-            {reports.map((report) => (
-              <ReportCard key={report.title} {...report} />
-            ))}
+            {postsLoading
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="rounded-lg border bg-card p-4 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start space-x-3 flex-1">
+                        <Skeleton className="h-9 w-9 rounded-lg shrink-0" />
+                        <div className="space-y-2 flex-1">
+                          <Skeleton className="h-4 w-48" />
+                          <Skeleton className="h-3 w-full max-w-sm" />
+                        </div>
+                      </div>
+                      <Skeleton className="h-6 w-20 rounded-full" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-3 w-36" />
+                      <div className="flex space-x-2">
+                        <Skeleton className="h-8 w-24" />
+                        <Skeleton className="h-8 w-20" />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              : (postsData?.posts ?? []).map((post, index) => {
+                  const Icon = REPORT_ICONS[index % REPORT_ICONS.length]!;
+                  const hoursAgo = ((post.id % 12) + 1);
+                  const lastGenerated = hoursAgo === 1 ? '1 hour ago' : `${hoursAgo} hours ago`;
+                  const status: 'ready' | 'generating' = post.reactions.likes > 5 ? 'ready' : 'generating';
+                  const description = post.body.length > 100
+                    ? `${post.body.substring(0, 100)}…`
+                    : post.body;
+                  return (
+                    <ReportCard
+                      key={post.id}
+                      title={post.title}
+                      description={description}
+                      lastGenerated={lastGenerated}
+                      icon={Icon}
+                      status={status}
+                    />
+                  );
+                })
+            }
           </div>
         </TabsContent>
         

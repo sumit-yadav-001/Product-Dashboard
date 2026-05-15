@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   User, 
   Mail, 
@@ -24,10 +24,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarContent, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/common/Skeletons';
 import { useCurrentUser } from '@/hooks/redux';
+import { useGetUserQuery } from '@/store/api/usersApi';
+import toast from 'react-hot-toast';
 
 interface ProfileFormData {
   name: string;
@@ -40,28 +43,106 @@ interface ProfileFormData {
   position: string;
 }
 
+function ProfileSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+        <Skeleton className="h-10 w-28" />
+      </div>
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="md:col-span-1 rounded-lg border bg-card p-6 space-y-4">
+          <div className="flex flex-col items-center space-y-4">
+            <Skeleton className="h-24 w-24 rounded-full" />
+            <Skeleton className="h-5 w-36" />
+            <Skeleton className="h-4 w-28" />
+            <div className="w-full space-y-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-4 w-full" />
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="md:col-span-2 space-y-4">
+          <Skeleton className="h-10 w-full" />
+          <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-20 rounded-lg" />
+            ))}
+          </div>
+          <Skeleton className="h-40 rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ProfilePage() {
-  const user = useCurrentUser();
+  const authUser = useCurrentUser();
+  const { data: dummyUser, isLoading, isError } = useGetUserQuery(2);
+
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<ProfileFormData>({
-    name: user?.name || '',
-    email: user?.email || '',
-    phone: '',
-    location: 'San Francisco, CA',
-    bio: 'Software developer passionate about creating amazing user experiences.',
-    website: 'https://johndoe.dev',
-    company: 'Tech Corp',
-    position: 'Senior Frontend Developer',
+    name:     '',
+    email:    '',
+    phone:    '',
+    location: '',
+    bio:      '',
+    website:  'https://janedoe.dev',
+    company:  '',
+    position: '',
   });
 
-  const handleSave = () => {
+  // Populate form once API data arrives
+  useEffect(() => {
+    if (dummyUser) {
+      setFormData({
+        name:     `${dummyUser.firstName} ${dummyUser.lastName}`,
+        email:    dummyUser.email,
+        phone:    dummyUser.phone,
+        location: `${dummyUser.address.city}, ${dummyUser.address.state}`,
+        bio:      `${dummyUser.company.title} at ${dummyUser.company.name}. Passionate about technology and innovation. Username: @${dummyUser.username}.`,
+        website:  'https://janedoe.dev',
+        company:  dummyUser.company.name,
+        position: dummyUser.company.title,
+      });
+    }
+  }, [dummyUser]);
+
+  const getUserInitials = () => {
+    if (!formData.name) return 'U';
+    const parts = formData.name.split(' ');
+    return parts.length >= 2
+      ? `${parts[0]?.[0] ?? ''}${parts[1]?.[0] ?? ''}`.toUpperCase()
+      : formData.name.substring(0, 2).toUpperCase();
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    await new Promise(r => setTimeout(r, 800));
+    setIsSaving(false);
     setIsEditing(false);
-    // Save logic would go here
+    toast.success('Profile updated successfully!');
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Reset form data to original values
+    if (dummyUser) {
+      setFormData({
+        name:     `${dummyUser.firstName} ${dummyUser.lastName}`,
+        email:    dummyUser.email,
+        phone:    dummyUser.phone,
+        location: `${dummyUser.address.city}, ${dummyUser.address.state}`,
+        bio:      `${dummyUser.company.title} at ${dummyUser.company.name}. Passionate about technology and innovation. Username: @${dummyUser.username}.`,
+        website:  'https://janedoe.dev',
+        company:  dummyUser.company.name,
+        position: dummyUser.company.title,
+      });
+    }
   };
 
   const activities = [
@@ -88,6 +169,19 @@ export function ProfilePage() {
     { name: 'Docker', level: 65 },
   ];
 
+  if (isLoading) return <ProfileSkeleton />;
+
+  if (isError) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <div className="text-center space-y-3">
+          <p className="text-lg font-semibold text-destructive">Failed to load profile</p>
+          <p className="text-sm text-muted-foreground">Could not fetch user data. Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -105,13 +199,13 @@ export function ProfilePage() {
           </Button>
         ) : (
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={handleCancel}>
+            <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
               <X className="mr-2 h-4 w-4" />
               Cancel
             </Button>
-            <Button onClick={handleSave}>
+            <Button onClick={handleSave} disabled={isSaving}>
               <Save className="mr-2 h-4 w-4" />
-              Save Changes
+              {isSaving ? 'Saving…' : 'Save Changes'}
             </Button>
           </div>
         )}
@@ -123,13 +217,19 @@ export function ProfilePage() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center space-y-4">
               <div className="relative">
-                <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-2xl font-bold">
-                  {user?.name?.charAt(0) || 'U'}
-                </div>
+                <Avatar className="h-24 w-24">
+                  {dummyUser?.image && (
+                    <AvatarImage src={dummyUser.image} alt={formData.name} />
+                  )}
+                  <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
+                    {getUserInitials()}
+                  </AvatarFallback>
+                </Avatar>
                 {isEditing && (
                   <Button 
                     size="sm" 
                     className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
+                    onClick={() => toast('Photo upload coming soon', { icon: '📷' })}
                   >
                     <Camera className="h-4 w-4" />
                   </Button>
@@ -145,7 +245,7 @@ export function ProfilePage() {
               <div className="flex items-center space-x-1">
                 <Badge variant="secondary">
                   <Shield className="w-3 h-3 mr-1" />
-                  {user?.role}
+                  {authUser?.role ?? dummyUser?.role ?? 'user'}
                 </Badge>
                 <Badge variant="secondary">
                   <Award className="w-3 h-3 mr-1" />
@@ -358,7 +458,7 @@ export function ProfilePage() {
                   </div>
                   {isEditing && (
                     <div className="mt-4">
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full" onClick={() => toast('Add skill coming soon', { icon: '🛠️' })}>
                         Add Skill
                       </Button>
                     </div>

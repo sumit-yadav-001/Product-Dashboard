@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/utils';
 import { useCurrentUser } from '@/hooks/redux';
+import { useGetUsersQuery } from '@/store/api/usersApi';
 import toast from 'react-hot-toast';
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────
@@ -92,6 +93,10 @@ export function OnboardingPage() {
     security: true, updates: true, marketing: false, weekly: true,
   });
   const [selectedTheme, setSelectedTheme] = useState('light');
+
+  // Fetch first user to suggest org name
+  const { data: usersData } = useGetUsersQuery({ limit: 1 });
+  const suggestedOrgName = usersData?.users?.[0]?.company?.name ?? '';
 
   const profileForm = useForm<ProfileData>({
     resolver: zodResolver(profileSchema),
@@ -181,7 +186,7 @@ export function OnboardingPage() {
               <div className="space-y-4">
                 <div className="space-y-1.5">
                   <Label>Organization Name *</Label>
-                  <Input placeholder="Acme Corp" />
+                  <Input placeholder={suggestedOrgName || 'Acme Corp'} />
                 </div>
                 <div className="space-y-2">
                   <Label>Company Size *</Label>

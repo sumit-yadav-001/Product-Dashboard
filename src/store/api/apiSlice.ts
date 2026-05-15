@@ -8,14 +8,17 @@ import { mockAuthService } from '@/utils/mockAuth';
 // Auth is fully mocked — no real backend calls are made.
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_DUMMYJSON_API || 'https://dummyjson.com',
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers, { getState, endpoint }) => {
     const token = (getState() as RootState).auth.accessToken;
 
-    if (token) {
+    // Only attach auth headers for internal/auth endpoints, not external dummy APIs
+    const isAuthEndpoint = ['login', 'register', 'refreshToken', 'logout', 'getCurrentUser'].includes(endpoint);
+
+    if (token && isAuthEndpoint) {
       headers.set('authorization', `Bearer ${token}`);
     }
 
-    headers.set('content-type', 'application/json');
+    // Don't set Content-Type on GET requests — it triggers CORS preflight on external APIs
     return headers;
   },
 });

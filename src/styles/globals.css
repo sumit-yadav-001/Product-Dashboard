@@ -1,190 +1,321 @@
+/* ─── Google Font ─────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* ── Light mode ─────────────────────────────────────────── */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* Backgrounds */
+    --background:        220 20% 97%;
+    --foreground:        224 71% 4%;
+
+    /* Card / Popover */
+    --card:              0 0% 100%;
+    --card-foreground:   224 71% 4%;
+    --popover:           0 0% 100%;
+    --popover-foreground:224 71% 4%;
+
+    /* Brand */
+    --primary:           221 83% 53%;
+    --primary-foreground:210 40% 98%;
+
+    /* Neutral surfaces */
+    --secondary:         220 14% 94%;
+    --secondary-foreground:220 9% 46%;
+    --muted:             220 14% 94%;
+    --muted-foreground:  220 9% 46%;
+    --accent:            220 14% 94%;
+    --accent-foreground: 224 71% 4%;
+
+    /* Semantic */
+    --destructive:       0 84% 60%;
+    --destructive-foreground:0 0% 98%;
+    --success:           142 71% 45%;
+    --success-foreground:0 0% 98%;
+    --warning:           38 92% 50%;
+    --warning-foreground:0 0% 98%;
+
+    /* Borders & inputs */
+    --border:            220 13% 89%;
+    --input:             220 13% 89%;
+    --ring:              221 83% 53%;
+
+    /* Radius */
+    --radius:            0.625rem;
+
+    /* Sidebar */
+    --sidebar-bg:        0 0% 100%;
+    --sidebar-border:    220 13% 89%;
+
+    /* Typography */
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
+  /* ── Dark mode ──────────────────────────────────────────── */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    color-scheme: dark;
+
+    --background:        222 47% 6%;
+    --foreground:        210 40% 98%;
+
+    --card:              222 47% 8%;
+    --card-foreground:   210 40% 98%;
+    --popover:           222 47% 8%;
+    --popover-foreground:210 40% 98%;
+
+    --primary:           217 91% 60%;
+    --primary-foreground:222 47% 7%;
+
+    --secondary:         217 33% 14%;
+    --secondary-foreground:210 40% 98%;
+    --muted:             217 33% 14%;
+    --muted-foreground:  215 20% 55%;
+    --accent:            217 33% 16%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
+
+    --destructive:       0 63% 31%;
+    --destructive-foreground:210 40% 98%;
+    --success:           142 71% 29%;
+    --success-foreground:0 0% 98%;
+    --warning:           38 92% 35%;
+    --warning-foreground:0 0% 98%;
+
+    --border:            217 33% 17%;
+    --input:             217 33% 17%;
+    --ring:              217 91% 60%;
+
+    --sidebar-bg:        222 47% 5%;
+    --sidebar-border:    217 33% 13%;
   }
 
-  .theme-corporate {
-    --background: 210 100% 98%;
-    --foreground: 210 100% 15%;
-    --primary: 210 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 210 60% 90%;
-    --secondary-foreground: 210 100% 15%;
-    --muted: 210 60% 95%;
-    --muted-foreground: 210 30% 40%;
-    --accent: 210 80% 85%;
-    --accent-foreground: 210 100% 15%;
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 210 40% 85%;
-    --input: 210 40% 85%;
-    --ring: 210 100% 50%;
-    --card: 0 0% 100%;
-    --card-foreground: 210 100% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 100% 15%;
-  }
-
-  .theme-playful {
-    --background: 300 100% 98%;
-    --foreground: 300 100% 15%;
-    --primary: 280 100% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 320 60% 90%;
-    --secondary-foreground: 300 100% 15%;
-    --muted: 310 60% 95%;
-    --muted-foreground: 300 30% 40%;
-    --accent: 290 80% 85%;
-    --accent-foreground: 300 100% 15%;
-    --destructive: 350 75% 55%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 310 40% 85%;
-    --input: 310 40% 85%;
-    --ring: 280 100% 60%;
-    --card: 0 0% 100%;
-    --card-foreground: 300 100% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 300 100% 15%;
-  }
-
-  * {
+  /* ── Reset ──────────────────────────────────────────────── */
+  *, *::before, *::after {
     @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-sans);
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    line-height: 1.6;
+  }
+
+  /* ── Radix portal dark mode fix ─────────────────────────── */
+  /* Radix portals render at <body> root, outside .dark — we
+     propagate the CSS variables by targeting [data-radix-popper-content-wrapper]
+     and any portal container when the html element has .dark */
+  .dark [data-radix-popper-content-wrapper],
+  .dark [data-radix-select-content],
+  .dark [data-radix-dropdown-menu-content],
+  .dark [data-radix-popover-content],
+  .dark [data-radix-tooltip-content],
+  .dark [data-radix-context-menu-content],
+  .dark [data-radix-dialog-content],
+  .dark [data-radix-alert-dialog-content] {
+    color-scheme: dark;
+  }
+
+  /* Ensure all Radix portal roots inherit dark variables */
+  html.dark {
+    color-scheme: dark;
+  }
+
+  /* ── Scrollbar ──────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.4); }
+
+  /* ── Focus ring ─────────────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* ── Selection ──────────────────────────────────────────── */
+  ::selection {
+    background: hsl(var(--primary) / 0.15);
+    color: hsl(var(--foreground));
   }
 }
 
+/* ─── Keyframes ───────────────────────────────────────────── */
 @layer utilities {
-  /* Grid pattern for backgrounds */
-  .bg-grid-white\/\[0\.05\] {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  }
-
-  /* Animation utilities */
-  @keyframes slide-in-from-top {
-    from {
-      transform: translateY(-10px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
   @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
-
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
   @keyframes zoom-in {
-    from {
-      transform: scale(0.95);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to   { background-position:  200% 0; }
+  }
+  @keyframes spin-slow {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes pulse-ring {
+    0%   { transform: scale(0.95); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
+    70%  { transform: scale(1);    box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
   }
 
-  .animate-in {
-    animation-fill-mode: both;
+  /* Animate-in helpers (used by shadcn) */
+  .animate-in  { animation-fill-mode: both; }
+  .animate-out { animation-fill-mode: both; }
+
+  .fade-in          { animation: fade-in          0.18s ease-out; }
+  .fade-out         { animation: fade-out         0.15s ease-in; }
+  .slide-in-from-top-1    { animation: slide-down 0.18s ease-out; }
+  .slide-in-from-bottom-4 { animation: slide-up   0.22s ease-out; }
+  .slide-in-from-right-4  { animation: slide-in-right 0.22s ease-out; }
+  .zoom-in-95       { animation: zoom-in          0.18s ease-out; }
+  .duration-200     { animation-duration: 200ms; }
+  .duration-300     { animation-duration: 300ms; }
+
+  /* Shimmer skeleton */
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted-foreground) / 0.08) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
   }
 
-  .slide-in-from-top-1 {
-    animation: slide-in-from-top 0.2s ease-out;
+  /* Glass surface */
+  .glass {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.6);
   }
 
-  .fade-in {
-    animation: fade-in 0.2s ease-out;
+  /* Premium card hover */
+  .card-hover {
+    @apply transition-all duration-200;
+  }
+  .card-hover:hover {
+    @apply shadow-md -translate-y-0.5;
   }
 
-  .zoom-in-95 {
-    animation: zoom-in 0.2s ease-out;
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  .duration-200 {
-    animation-duration: 200ms;
+  /* Dot grid background */
+  .bg-dot-grid {
+    background-image: radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 
-  .text-balance {
-    text-wrap: balance;
-  }
+  /* Status dot */
+  .status-dot-online  { @apply h-2 w-2 rounded-full bg-emerald-500; animation: pulse-ring 2s infinite; }
+  .status-dot-offline { @apply h-2 w-2 rounded-full bg-muted-foreground; }
+  .status-dot-busy    { @apply h-2 w-2 rounded-full bg-amber-500; }
+
+  .text-balance { text-wrap: balance; }
 }
 
+/* ─── Component layer ─────────────────────────────────────── */
 @layer components {
-  .animate-fade-in {
-    @apply animate-in fade-in duration-200;
+  /* Page header pattern */
+  .page-header {
+    @apply flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between;
+  }
+  .page-title {
+    @apply text-2xl font-bold tracking-tight md:text-3xl;
+  }
+  .page-subtitle {
+    @apply text-sm text-muted-foreground mt-0.5;
   }
 
-  .animate-slide-up {
-    @apply animate-in slide-in-from-bottom-4 duration-300;
+  /* Section card */
+  .section-card {
+    @apply rounded-xl border bg-card shadow-sm;
   }
 
-  .animate-slide-down {
-    @apply animate-in slide-in-from-top-4 duration-300;
+  /* Stat card */
+  .stat-card {
+    @apply rounded-xl border bg-card p-5 shadow-sm transition-shadow hover:shadow-md;
   }
 
-  .animate-slide-left {
-    @apply animate-in slide-in-from-right-4 duration-300;
+  /* Table row hover */
+  .table-row-hover {
+    @apply hover:bg-muted/40 transition-colors;
   }
 
-  .animate-slide-right {
-    @apply animate-in slide-in-from-left-4 duration-300;
+  /* Form field */
+  .form-field {
+    @apply space-y-1.5;
+  }
+  .form-label {
+    @apply text-sm font-medium leading-none;
+  }
+  .form-error {
+    @apply text-xs text-destructive flex items-center gap-1 mt-1;
+  }
+
+  /* Nav item active */
+  .nav-item-active {
+    @apply bg-primary/10 text-primary font-medium;
+  }
+  .nav-item-inactive {
+    @apply text-muted-foreground hover:bg-accent hover:text-accent-foreground;
+  }
+
+  /* Badge variants */
+  .badge-success {
+    @apply bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400;
+  }
+  .badge-warning {
+    @apply bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400;
+  }
+  .badge-error {
+    @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
+  }
+  .badge-info {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400;
+  }
+  .badge-neutral {
+    @apply bg-muted text-muted-foreground;
   }
 }

@@ -276,7 +276,7 @@ export function EnhancedSidebar({ isOpen, onToggle }: SidebarProps) {
       <div
         className={cn(
           'fixed inset-y-0 left-0 z-30 flex flex-col bg-card border-r transition-all duration-300 overflow-hidden',
-          isOpen ? 'w-80 translate-x-0' : 'w-16 -translate-x-full lg:translate-x-0'
+          isOpen ? 'w-64 translate-x-0' : 'w-16 -translate-x-full lg:translate-x-0'
         )}
       >
         {/* Sidebar header */}
@@ -287,7 +287,7 @@ export function EnhancedSidebar({ isOpen, onToggle }: SidebarProps) {
             </div>
             {isOpen && (
               <div className="ml-3 flex-1">
-                <span className="text-lg font-semibold">Admin Template</span>
+                <span className="text-lg font-semibold">Product Dashboard</span>
                 <div className="text-xs text-muted-foreground">Enterprise Edition</div>
               </div>
             )}

@@ -86,22 +86,31 @@ export function getSystemTheme(): 'light' | 'dark' {
 export function applyTheme(theme: Theme, mode: ThemeMode) {
   const root = document.documentElement;
   const isDarkMode = mode === 'dark' || (mode === 'system' && getSystemTheme() === 'dark');
-  
+
   // Remove all theme classes
-  root.className = root.className.replace(/theme-\w+/g, '');
-  
-  // Add dark class if needed
+  root.className = root.className.replace(/theme-\w+/g, '').trim();
+
+  // Toggle dark class
   root.classList.toggle('dark', isDarkMode);
-  
-  // Add theme class if not default light/dark theme
+
+  // Only apply inline CSS variables for non-default themes (corporate, playful, etc.)
+  // For light/dark, rely entirely on the CSS class variables — do NOT override with inline styles
   if (theme.id !== 'light' && theme.id !== 'dark') {
     root.classList.add(`theme-${theme.id}`);
+    Object.entries(theme.colors).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+  } else {
+    // Clear any previously set inline CSS variable overrides
+    const cssVarKeys = [
+      'background', 'foreground', 'card', 'card-foreground',
+      'popover', 'popover-foreground', 'primary', 'primary-foreground',
+      'secondary', 'secondary-foreground', 'muted', 'muted-foreground',
+      'accent', 'accent-foreground', 'destructive', 'destructive-foreground',
+      'border', 'input', 'ring',
+    ];
+    cssVarKeys.forEach(key => root.style.removeProperty(`--${key}`));
   }
-  
-  // Apply CSS variables
-  Object.entries(theme.colors).forEach(([key, value]) => {
-    root.style.setProperty(`--${key}`, value);
-  });
 }
 
 export function saveThemePreference(theme: Theme, mode: ThemeMode) {

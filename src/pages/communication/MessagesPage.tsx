@@ -35,7 +35,7 @@ export function MessagesPage() {
     return messages.filter(
       (m) =>
         `${m.user.firstName} ${m.user.lastName}`.toLowerCase().includes(q) ||
-        m.quote.quote.toLowerCase().includes(q)
+        (m.quote?.quote ?? '').toLowerCase().includes(q)
     );
   }, [messages, search]);
 

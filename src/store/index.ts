@@ -4,6 +4,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { authSlice } from './slices/authSlice';
 import { featureFlagsSlice } from './slices/featureFlagsSlice';
 import { uiSlice } from './slices/uiSlice';
+import { notificationsSlice } from './slices/notificationsSlice';
 import { apiSlice } from './api/apiSlice';
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     auth: authSlice.reducer,
     featureFlags: featureFlagsSlice.reducer,
     ui: uiSlice.reducer,
+    notifications: notificationsSlice.reducer,
     api: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -31,3 +33,4 @@ export type AppDispatch = typeof store.dispatch;
 export const { login, logout, setUser, setTokens, clearAuth } = authSlice.actions;
 export const { toggleFeatureFlag, setFeatureFlags } = featureFlagsSlice.actions;
 export const { setLoading, setError, clearError, setNotification, clearNotification } = uiSlice.actions;
+export { markRead, markAllRead, deleteNotification, clearAll, addNotification } from './slices/notificationsSlice';

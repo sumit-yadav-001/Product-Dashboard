@@ -6,10 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/common/Skeletons';
 import { useGetCartsQuery } from '@/store/api/cartsApi';
 
-const ORDER_STATUSES = ['Delivered', 'Processing', 'Shipped', 'Pending', 'Cancelled'];
+const ORDER_STATUSES = ['Delivered', 'Processing', 'Shipped', 'Pending', 'Cancelled'] as const;
 
-function getStatus(id: number) {
-  return ORDER_STATUSES[id % ORDER_STATUSES.length];
+function getStatus(id: number): string {
+  const status = ORDER_STATUSES[id % ORDER_STATUSES.length];
+  return status || 'Delivered';
 }
 
 function StatusBadge({ status }: { status: string }) {

@@ -6,15 +6,17 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/common/Skeletons';
 import { useGetCartsQuery } from '@/store/api/cartsApi';
 
-const PAYMENT_METHODS = ['Visa', 'Mastercard', 'PayPal', 'Stripe', 'Apple Pay'];
-const PAYMENT_STATUSES = ['Completed', 'Completed', 'Completed', 'Pending', 'Refunded'];
+const PAYMENT_METHODS = ['Visa', 'Mastercard', 'PayPal', 'Stripe', 'Apple Pay'] as const;
+const PAYMENT_STATUSES = ['Completed', 'Completed', 'Completed', 'Pending', 'Refunded'] as const;
 
-function getPaymentMethod(id: number) {
-  return PAYMENT_METHODS[id % PAYMENT_METHODS.length];
+function getPaymentMethod(id: number): string {
+  const method = PAYMENT_METHODS[id % PAYMENT_METHODS.length];
+  return method || 'Visa';
 }
 
-function getPaymentStatus(id: number) {
-  return PAYMENT_STATUSES[id % PAYMENT_STATUSES.length];
+function getPaymentStatus(id: number): string {
+  const status = PAYMENT_STATUSES[id % PAYMENT_STATUSES.length];
+  return status || 'Completed';
 }
 
 function getDate(id: number) {

@@ -1,13 +1,13 @@
 import React from 'react';
 import { cn } from '@/utils';
 
-interface SkeletonProps {
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
 /** Base animated skeleton pulse element */
-export const Skeleton = React.memo(({ className }: SkeletonProps) => (
-  <div className={cn('animate-pulse rounded-md bg-muted', className)} />
+export const Skeleton = React.memo(({ className, ...props }: SkeletonProps) => (
+  <div className={cn('animate-pulse rounded-md bg-muted', className)} {...props} />
 ));
 Skeleton.displayName = 'Skeleton';
 

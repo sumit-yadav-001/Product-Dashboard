@@ -21,13 +21,19 @@ export function MessagesPage() {
 
   const messages = React.useMemo(() => {
     if (!usersData?.users || !quotesData?.quotes) return [];
-    return usersData.users.map((user, idx) => ({
-      id: user.id,
-      user,
-      quote: quotesData.quotes[idx % quotesData.quotes.length],
-      time: `${(idx % 12) + 1}:${String((idx * 7) % 60).padStart(2, '0')} ${idx % 2 === 0 ? 'AM' : 'PM'}`,
-      unread: idx % 3 === 0,
-    }));
+    return usersData.users.map((user, idx) => {
+      const quote = (quotesData.quotes[idx % quotesData.quotes.length] || { 
+        quote: "No message content", 
+        author: "System" 
+      }) as { quote: string; author: string };
+      return {
+        id: user.id,
+        user,
+        quote,
+        time: `${(idx % 12) + 1}:${String((idx * 7) % 60).padStart(2, '0')} ${idx % 2 === 0 ? 'AM' : 'PM'}`,
+        unread: idx % 3 === 0,
+      };
+    });
   }, [usersData, quotesData]);
 
   const filtered = React.useMemo(() => {

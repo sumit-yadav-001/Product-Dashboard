@@ -40,8 +40,11 @@ export function ImportExportPage() {
   };
 
   const handleImport = (files: FileList | null) => {
-    if (!files?.length) return;
-    toast.success(`${files[0].name} imported successfully!`);
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    if (file && file.name) {
+      toast.success(`${file.name} imported successfully!`);
+    }
   };
 
   return (

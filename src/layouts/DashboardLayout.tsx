@@ -153,11 +153,11 @@ export function DashboardLayout() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer py-2.5">
+                  <DropdownMenuItem className="cursor-pointer py-2.5" onClick={() => navigate('/profile')}>
                     <User className="mr-3 h-4 w-4" />
                     <span>My Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer py-2.5">
+                  <DropdownMenuItem className="cursor-pointer py-2.5" onClick={() => navigate('/settings')}>
                     <Settings className="mr-3 h-4 w-4" />
                     <span>Account Settings</span>
                   </DropdownMenuItem>

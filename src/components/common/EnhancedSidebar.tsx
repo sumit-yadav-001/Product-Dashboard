@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   Users, 
@@ -261,6 +261,7 @@ function NavItemComponent({ item, isOpen, level = 0 }: NavItemComponentProps) {
 
 export function EnhancedSidebar({ isOpen, onToggle }: SidebarProps) {
   const user = useCurrentUser();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -324,27 +325,40 @@ export function EnhancedSidebar({ isOpen, onToggle }: SidebarProps) {
         {/* User info */}
         {isOpen && user && (
           <div className="border-t p-4">
-            <div className="flex items-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <button
+              onClick={() => navigate('/profile')}
+              className="flex items-center w-full rounded-lg p-2 hover:bg-accent transition-colors group"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
                 {user.name.charAt(0).toUpperCase()}
               </div>
-              <div className="ml-3 min-w-0 flex-1">
-                <p className="text-sm font-medium truncate">
+              <div className="ml-3 min-w-0 flex-1 text-left">
+                <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
                   {user.name}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {user.role.toLowerCase()} • {user.email}
+                  {user.role.toLowerCase()} &bull; {user.email}
                 </p>
               </div>
-            </div>
+            </button>
 
             {/* Quick actions */}
-            <div className="mt-3 flex space-x-2">
-              <Button variant="outline" size="sm" className="flex-1">
+            <div className="mt-2 flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                onClick={() => navigate('/profile')}
+              >
                 <UserCog className="h-3 w-3 mr-1" />
                 Profile
               </Button>
-              <Button variant="outline" size="sm" className="flex-1">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                onClick={() => navigate('/settings')}
+              >
                 <Settings className="h-3 w-3 mr-1" />
                 Settings
               </Button>
@@ -354,12 +368,23 @@ export function EnhancedSidebar({ isOpen, onToggle }: SidebarProps) {
 
         {/* Collapsed user indicator */}
         {!isOpen && user && (
-          <div className="border-t p-2">
-            <div className="flex justify-center">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm">
+          <div className="border-t p-2 space-y-1">
+            <button
+              onClick={() => navigate('/profile')}
+              title="Go to Profile"
+              className="flex w-full justify-center rounded-lg p-1.5 hover:bg-accent transition-colors"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-semibold">
                 {user.name.charAt(0).toUpperCase()}
               </div>
-            </div>
+            </button>
+            <button
+              onClick={() => navigate('/settings')}
+              title="Go to Settings"
+              className="flex w-full justify-center rounded-lg p-1.5 hover:bg-accent transition-colors"
+            >
+              <Settings className="h-4 w-4 text-muted-foreground" />
+            </button>
           </div>
         )}
       </div>

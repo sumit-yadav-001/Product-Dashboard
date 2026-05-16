@@ -48,12 +48,26 @@ export const productsApi = apiSlice.injectEndpoints({
         url: `${DUMMYJSON_BASE_URL}/products/categories`,
         method: 'GET',
       }),
-      transformResponse: (response: string[]) => {
-        return response.map((category) => ({
-          slug: category,
-          name: category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' '),
-          url: `/products/category/${category}`,
-        }));
+      transformResponse: (response: unknown) => {
+        // dummyjson v2 returns [{slug, name, url}], v1 returns string[]
+        if (Array.isArray(response)) {
+          if (response.length === 0) return [];
+          if (typeof response[0] === 'string') {
+            // v1 format: string[]
+            return (response as string[]).map((category) => ({
+              slug: category,
+              name: category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' '),
+              url: `/products/category/${category}`,
+            }));
+          }
+          // v2 format: {slug, name, url}[]
+          return (response as Array<{ slug: string; name: string; url: string }>).map((cat) => ({
+            slug: cat.slug,
+            name: cat.name,
+            url: cat.url,
+          }));
+        }
+        return [];
       },
       keepUnusedDataFor: 3600, // Cache for 1 hour
     }),

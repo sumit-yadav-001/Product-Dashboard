@@ -287,8 +287,7 @@ export function EnhancedSidebar({ isOpen, onToggle }: SidebarProps) {
             </div>
             {isOpen && (
               <div className="ml-3 flex-1">
-                <span className="text-lg font-semibold">Product Dashboard</span>
-                <div className="text-xs text-muted-foreground">Enterprise Edition</div>
+                <span className="text-lg font-semibold">Admin</span>
               </div>
             )}
           </div>

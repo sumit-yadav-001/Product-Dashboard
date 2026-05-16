@@ -41,7 +41,7 @@ export function MessagesPage() {
     return messages.filter(
       (m) =>
         `${m.user.firstName} ${m.user.lastName}`.toLowerCase().includes(q) ||
-        (m.quote?.quote ?? '').toLowerCase().includes(q)
+        (m.quote.quote ?? '').toLowerCase().includes(q)
     );
   }, [messages, search]);
 
@@ -100,7 +100,7 @@ export function MessagesPage() {
                         </p>
                         <span className="text-xs text-muted-foreground shrink-0 ml-2">{msg.time}</span>
                       </div>
-                      <p className="text-xs text-muted-foreground truncate mt-0.5">{msg.quote.quote.slice(0, 50)}…</p>
+                      <p className="text-xs text-muted-foreground truncate mt-0.5">{(msg.quote?.quote ?? '').slice(0, 50)}…</p>
                     </div>
                     {msg.unread && (
                       <div className="h-2 w-2 rounded-full bg-primary shrink-0 mt-2" />
@@ -131,8 +131,8 @@ export function MessagesPage() {
               <div className="flex-1 p-6 overflow-y-auto">
                 <div className="max-w-lg">
                   <div className="bg-muted rounded-2xl rounded-tl-sm p-4">
-                    <p className="text-sm leading-relaxed">"{selectedMessage.quote.quote}"</p>
-                    <p className="text-xs text-muted-foreground mt-2">— {selectedMessage.quote.author}</p>
+                    <p className="text-sm leading-relaxed">"{selectedMessage.quote?.quote ?? ''}"</p>
+                    <p className="text-xs text-muted-foreground mt-2">— {selectedMessage.quote?.author ?? ''}</p>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">{selectedMessage.time}</p>
                 </div>

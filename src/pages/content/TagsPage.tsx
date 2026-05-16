@@ -96,7 +96,9 @@ export function TagsPage() {
           {isLoading ? (
             <div className="flex flex-wrap gap-2">
               {Array.from({ length: 20 }).map((_, i) => (
-                <Skeleton key={i} className={`h-7 rounded-full`} style={{ width: `${Math.random() * 60 + 40}px` }} />
+                <div key={i} style={{ width: `${(i % 3 === 0 ? 80 : i % 3 === 1 ? 60 : 100)}px` }}>
+                  <Skeleton className="h-7 rounded-full w-full" />
+                </div>
               ))}
             </div>
           ) : (

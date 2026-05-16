@@ -41,7 +41,7 @@ export function ImportExportPage() {
 
   const handleImport = (files: FileList | null) => {
     if (!files || files.length === 0) return;
-    const file = files[0];
+    const file = files.item(0);
     if (file && file.name) {
       toast.success(`${file.name} imported successfully!`);
     }

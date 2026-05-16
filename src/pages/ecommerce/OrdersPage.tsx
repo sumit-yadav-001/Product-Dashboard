@@ -9,8 +9,7 @@ import { useGetCartsQuery } from '@/store/api/cartsApi';
 const ORDER_STATUSES = ['Delivered', 'Processing', 'Shipped', 'Pending', 'Cancelled'] as const;
 
 function getStatus(id: number): string {
-  const status = ORDER_STATUSES[id % ORDER_STATUSES.length];
-  return status || 'Delivered';
+  return ORDER_STATUSES[id % ORDER_STATUSES.length] ?? 'Delivered';
 }
 
 function StatusBadge({ status }: { status: string }) {

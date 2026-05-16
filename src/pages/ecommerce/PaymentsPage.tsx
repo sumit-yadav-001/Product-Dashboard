@@ -10,13 +10,11 @@ const PAYMENT_METHODS = ['Visa', 'Mastercard', 'PayPal', 'Stripe', 'Apple Pay'] 
 const PAYMENT_STATUSES = ['Completed', 'Completed', 'Completed', 'Pending', 'Refunded'] as const;
 
 function getPaymentMethod(id: number): string {
-  const method = PAYMENT_METHODS[id % PAYMENT_METHODS.length];
-  return method || 'Visa';
+  return PAYMENT_METHODS[id % PAYMENT_METHODS.length] ?? 'Visa';
 }
 
 function getPaymentStatus(id: number): string {
-  const status = PAYMENT_STATUSES[id % PAYMENT_STATUSES.length];
-  return status || 'Completed';
+  return PAYMENT_STATUSES[id % PAYMENT_STATUSES.length] ?? 'Completed';
 }
 
 function getDate(id: number) {

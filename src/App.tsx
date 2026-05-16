@@ -213,8 +213,14 @@ export function App() {
           <Route path="/tools/backup"        element={<Page><BackupPage /></Page>} />
           <Route path="/tools/logs"          element={<Page><LogsPage /></Page>} />
 
-          {/* Settings */}
-          <Route path="/settings" element={<SettingsPage />} />
+          {/* Settings — main + sub-routes for direct tab linking */}
+          <Route path="/settings"                element={<SettingsPage />} />
+          <Route path="/settings/general"        element={<SettingsPage />} />
+          <Route path="/settings/security"       element={<SettingsPage />} />
+          <Route path="/settings/notifications"  element={<SettingsPage />} />
+          <Route path="/settings/integrations"   element={<SettingsPage />} />
+          <Route path="/settings/api"            element={<SettingsPage />} />
+          <Route path="/settings/billing"        element={<SettingsPage />} />
 
           {/* Support */}
           <Route path="/support" element={<Page><SupportPage /></Page>} />

@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Settings, User, Shield, Bell, Zap, Code2, CreditCard,
   Eye, EyeOff, Plus, Trash2, RefreshCw, Download, Check,
@@ -542,6 +543,9 @@ function BillingTab() {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export function SettingsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const TABS = [
     { value: 'general',       label: 'General',       icon: Settings },
     { value: 'security',      label: 'Security',      icon: Shield },
@@ -551,6 +555,14 @@ export function SettingsPage() {
     { value: 'billing',       label: 'Billing',        icon: CreditCard },
   ];
 
+  // Derive active tab from URL path: /settings/security → 'security'
+  const pathSegment = location.pathname.split('/').pop() ?? 'general';
+  const activeTab = TABS.some(t => t.value === pathSegment) ? pathSegment : 'general';
+
+  const handleTabChange = (value: string) => {
+    navigate(`/settings/${value}`, { replace: true });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -559,7 +571,7 @@ export function SettingsPage() {
         <p className="text-sm text-muted-foreground mt-1">Manage your account settings and preferences</p>
       </div>
 
-      <Tabs defaultValue="general" className="space-y-5">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-5">
         {/* Tab list — scrollable on mobile */}
         <div className="overflow-x-auto -mx-1 px-1">
           <TabsList className="inline-flex h-10 gap-0.5 rounded-xl bg-muted p-1">

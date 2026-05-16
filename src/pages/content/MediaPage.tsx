@@ -1,4 +1,91 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  Upload, Search, Grid, List, Filter, Trash2, Download, Eye,
+  X, Check, Copy, ZoomIn, Image as ImageIcon, Music, FileText, Video,
+  AlertCircle, Loader2, File,
+} from 'lucide-react';
 
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/common/Skeletons';
+import { cn } from '@/utils';
+import { useGetProductsQuery } from '@/store/api/productsApi';
+import toast from 'react-hot-toast';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type MediaType = 'image' | 'video' | 'audio' | 'document' | 'other';
+
+interface MediaItem {
+  id: string;
+  name: string;
+  url: string;
+  type: MediaType;
+  mimeType: string;
+  size: number;
+  width?: number;
+  height?: number;
+  uploadedAt: Date;
+  category: string;
+  source: 'local' | 'api';
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const ACCEPTED = 'image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv';
+
+const FILTER_OPTIONS = [
+  { label: 'All',       value: 'all'      },
+  { label: 'Images',    value: 'image'    },
+  { label: 'Videos',    value: 'video'    },
+  { label: 'Audio',     value: 'audio'    },
+  { label: 'Documents', value: 'document' },
+];
+
+const SIZES = [204800, 512000, 153600, 307200, 409600, 102400, 614400, 256000,
+               358400, 471040, 184320, 327680, 491520, 143360, 225280, 368640,
+               286720, 430080, 122880, 245760];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+}
+
+function getMediaType(mimeType: string): MediaType {
+  if (mimeType.startsWith('image/'))  return 'image';
+  if (mimeType.startsWith('video/'))  return 'video';
+  if (mimeType.startsWith('audio/'))  return 'audio';
+  if (
+    mimeType === 'application/pdf' ||
+    mimeType.includes('word') ||
+    mimeType.includes('excel') ||
+    mimeType.includes('spreadsheet') ||
+    mimeType.includes('presentation') ||
+    mimeType.includes('powerpoint') ||
+    mimeType === 'text/plain' ||
+    mimeType === 'text/csv'
+  ) return 'document';
+  return 'other';
+}
+
+function MediaTypeIcon({ type, className }: { type: MediaType; className?: string }) {
+  const icons: Record<MediaType, React.ElementType> = {
+    image:    ImageIcon,
+    video:    Video,
+    audio:    Music,
+    document: FileText,
+    other:    File,
+  };
+  const Icon = icons[type] ?? File;
+  return <Icon className={className} />;
+}
 
 // ─── Preview Modal ────────────────────────────────────────────────────────────
 
@@ -277,11 +364,6 @@ export function MediaPage() {
   const [uploading, setUploading]     = useState(false);
   const [localItems, setLocalItems]   = useState<MediaItem[]>([]);
   const [showUpload, setShowUpload]   = useState(false);
-
-  // Seed sizes deterministically (no Math.random in render)
-  const SIZES = [204800, 512000, 153600, 307200, 409600, 102400, 614400, 256000,
-                 358400, 471040, 184320, 327680, 491520, 143360, 225280, 368640,
-                 286720, 430080, 122880, 245760];
 
   const { data, isLoading, error, refetch } = useGetProductsQuery({ limit: 20 });
 
@@ -598,7 +680,7 @@ export function MediaPage() {
             : filtered.length === 0
             ? (
               <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-                <Image className="h-12 w-12 text-muted-foreground mb-3" />
+                <ImageIcon className="h-12 w-12 text-muted-foreground mb-3" />
                 <p className="font-semibold">No files found</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {search ? 'Try a different search term' : 'Upload some files to get started'}
